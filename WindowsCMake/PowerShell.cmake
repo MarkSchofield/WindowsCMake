@@ -23,7 +23,7 @@
 #----------------------------------------------------------------------------------------------------------------------
 include_guard()
 
-include("${CMAKE_CURRENT_LIST_DIR}/ToolchainCommon.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/WindowsCMakeCommon.cmake")
 
 #[[====================================================================================================================
     execute_powershell
@@ -36,7 +36,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/ToolchainCommon.cmake")
         )
 ====================================================================================================================]]#
 function(execute_powershell INLINE_SCRIPT)
-    toolchain_find_powershell(POWERSHELL_PATH)
+    windowscmake_find_powershell(POWERSHELL_PATH)
 
     set(OPTIONS)
     set(ONE_VALUE_KEYWORDS OUTPUT_VARIABLE)

@@ -23,11 +23,11 @@
 #----------------------------------------------------------------------------------------------------------------------
 include_guard()
 
-include("${CMAKE_CURRENT_LIST_DIR}/ToolchainCommon.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/WindowsCMakeCommon.cmake")
 
 #[[====================================================================================================================
-    toolchain_ensure_nuget
-    ----------------------
+    windowscmake_ensure_nuget
+    -------------------------
 
     Ensures that NuGet is available and the NUGET_PATH variables is set in the cache. The following steps will be
     taken:
@@ -43,7 +43,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/ToolchainCommon.cmake")
     `TOOLCHAIN_TOOLS_PATH` to a platform-independent path (e.g. relative to the root of the repository) will
     allow NuGet to be downloaded once for all platforms.
 ====================================================================================================================]]#
-function(toolchain_ensure_nuget)
+function(windowscmake_ensure_nuget)
     find_program(NUGET_PATH
         NAMES nuget nuget.exe
     )
@@ -67,7 +67,7 @@ function(toolchain_ensure_nuget)
 
         set(NUGET_PATH "${TOOLCHAIN_TOOLS_PATH}/nuget.exe" CACHE FILEPATH "The location of 'nuget.exe'" FORCE)
 
-        toolchain_download_file(
+        windowscmake_download_file(
             URL "https://dist.nuget.org/win-x86-commandline/v${NUGET_VERSION}/nuget.exe"
             PATH ${NUGET_PATH}
             EXPECTED_HASH ${NUGET_HASH}
@@ -110,7 +110,7 @@ function(install_nuget_package NUGET_PACKAGE_NAME NUGET_PACKAGE_VERSION VARIABLE
     set(NUGET_PACKAGE_PATH "${NUGET_PACKAGE_ROOT_PATH}/${NUGET_PACKAGE_NAME}.${NUGET_PACKAGE_VERSION}")
 
     if(NOT EXISTS "${NUGET_PACKAGE_PATH}")
-        toolchain_ensure_nuget()
+        windowscmake_ensure_nuget()
 
         set(NUGET_COMMAND ${NUGET_PATH} install ${NUGET_PACKAGE_NAME})
 

@@ -51,7 +51,7 @@ find_program(NINJA_PATH
     NAMES ninja ninja.exe
 )
 
-include("${CMAKE_CURRENT_LIST_DIR}/ToolchainCommon.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/WindowsCMakeCommon.cmake")
 
 # If:
 #   1. Ninja can't be found
@@ -68,7 +68,7 @@ if((NINJA_PATH STREQUAL "NINJA_PATH-NOTFOUND") AND TOOLCHAIN_TOOLS_PATH)
     set(NINJA_PATH "${TOOLCHAIN_TOOLS_PATH}/ninja.exe")
 
     if ((NOT CMAKE_MAKE_PROGRAM) OR (CMAKE_MAKE_PROGRAM STREQUAL NINJA_PATH))
-        toolchain_download_file(
+        windowscmake_download_file(
             URL "https://github.com/ninja-build/ninja/releases/download/v${NINJA_VERSION}/ninja-win.zip"
             PATH ${NINJA_ARCHIVE_PATH}
             EXPECTED_HASH ${NINJA_ARCHIVE_HASH}

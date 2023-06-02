@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(WindowsToolchainTests)
+include(${WINDOWSCMAKE_DIR}/Ninja.cmake)
+include(${WINDOWSCMAKE_DIR}/NuGet.cmake)
+
+project(WindowsCMakeTests)
 
 if (NOT SPECIFIED_PACKAGESAVEMODE)
     set(SPECIFIED_PACKAGESAVEMODE nupkg)

@@ -1,7 +1,6 @@
-# 'WindowsToolchainExample' CMake Project
+# 'WindowsCMakeExample' CMake Project
 
-This is an example CMake project that leverages the 'Windows.MSVC.toolchain.cmake' file to build a Windows Console
-Application, and Windows Desktop application and a shared library.
+This is an example CMake project that leverages WindowCMake and WindowsToolchain to build a Windows Console Application, a Windows Desktop application and a shared library.
 
 ## Getting Started
 

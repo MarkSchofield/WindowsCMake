@@ -1,0 +1,3 @@
+[submodule "WindowsToolchain"]
+	path = WindowsToolchain
+	url = https://github.com/MarkSchofield/WindowsToolchain

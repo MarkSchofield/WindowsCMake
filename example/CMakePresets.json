@@ -10,12 +10,13 @@
       "name": "windows",
       "hidden": true,
       "cacheVariables": {
-        "TOOLCHAIN_TOOLS_PATH": "${sourceDir}/__tools",
-        "NUGET_PACKAGE_ROOT_PATH": "${sourceDir}/__packages",
-        "CPPWINRT_VERSION": "2.0.220418.1",
-        "CPPWINRT_PROJECTION_ROOT_PATH": "${sourceDir}/__cppwinrt",
+        "CMAKE_SYSTEM_VERSION": "10.0.19041.0",
         "CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION_MAXIMUM": "10.0.22621.0",
-        "CMAKE_SYSTEM_VERSION": "10.0.19041.0"
+        "CPPWINRT_PROJECTION_ROOT_PATH": "${sourceDir}/__cppwinrt",
+        "CPPWINRT_VERSION": "2.0.230524.4",
+        "NUGET_PACKAGE_ROOT_PATH": "${sourceDir}/__packages",
+        "TOOLCHAIN_TOOLS_PATH": "${sourceDir}/__tools",
+        "WINDOWSCMAKE_DIR": "${sourceDir}/../WindowsCMake"
       }
     },
     {
@@ -26,7 +27,7 @@
       "description": "This build is only available on Windows",
       "generator": "Ninja Multi-Config",
       "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "../Windows.MSVC.toolchain.cmake",
+        "CMAKE_TOOLCHAIN_FILE": "../WindowsToolchain/Windows.MSVC.toolchain.cmake",
         "CMAKE_VS_VERSION_PRERELEASE": "ON",
         "VS_EXPERIMENTAL_MODULE": "ON",
         "VS_USE_SPECTRE_MITIGATION_RUNTIME": "ON"
@@ -41,7 +42,7 @@
       "description": "This build is only available on Windows",
       "generator": "Ninja Multi-Config",
       "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "../Windows.Clang.toolchain.cmake",
+        "CMAKE_TOOLCHAIN_FILE": "../WindowsToolchain/Windows.Clang.toolchain.cmake",
         "CMAKE_VS_VERSION_RANGE": "[16.0,18.0)",
         "CMAKE_VS_VERSION_PRERELEASE": "ON"
       },

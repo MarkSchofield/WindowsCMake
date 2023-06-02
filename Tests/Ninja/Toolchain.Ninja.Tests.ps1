@@ -20,7 +20,7 @@ AfterAll {
     Set-Location $OriginalLocation
 }
 
-Describe 'Windows.MSVC.toolchain.cmake Ninja support' {
+Describe 'WindowsCMake Ninja support' {
     BeforeEach {
         # Make sure that the build is clean before each test
         @(

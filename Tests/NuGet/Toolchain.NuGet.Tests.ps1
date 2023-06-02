@@ -20,7 +20,7 @@ AfterAll {
     Set-Location $OriginalLocation
 }
 
-Describe 'Windows.MSVC.toolchain.cmake NuGet support' {
+Describe 'WindowsCMake NuGet support' {
     BeforeEach {
         # Make sure that the build is clean before each test
         @(
