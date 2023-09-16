@@ -37,7 +37,6 @@ endfunction()
 #----------------------------------------------------------------------------------------------------------------------
 function(_generateMidlOutput TARGET IDL_FILES MIDL_GENERATED_FILES)
     get_target_property(TARGET_SOURCE_DIR ${TARGET} SOURCE_DIR)
-    get_target_property(TARGET_INCLUDE_DIRECTORIES ${TARGET} INCLUDE_DIRECTORIES)
 
     set(MIDL_COMMAND "")
     list(APPEND MIDL_COMMAND "\"${MIDL_COMPILER}\"")
@@ -52,9 +51,15 @@ function(_generateMidlOutput TARGET IDL_FILES MIDL_GENERATED_FILES)
     list(APPEND MIDL_COMMAND /dlldata "DllData.c")
     list(APPEND MIDL_COMMAND /out "\"${CMAKE_CURRENT_BINARY_DIR}/Generated Files\"")
 
-    list(TRANSFORM TARGET_INCLUDE_DIRECTORIES PREPEND "/I \"")
-    list(TRANSFORM TARGET_INCLUDE_DIRECTORIES APPEND "\"")
-    list(APPEND MIDL_COMMAND ${TARGET_INCLUDE_DIRECTORIES})
+    # Build the MIDL_INCLUDE_DIRECTORIES. They are:
+    #   1) The 'INCLUDE_DIRECTORIES' from the TARGET
+    #   2) The 'CMAKE_C_STANDARD_INCLUDE_DIRECTORIES'
+    get_target_property(MIDL_INCLUDE_DIRECTORIES ${TARGET} INCLUDE_DIRECTORIES)
+    list(APPEND MIDL_INCLUDE_DIRECTORIES ${CMAKE_C_STANDARD_INCLUDE_DIRECTORIES})
+    list(TRANSFORM MIDL_INCLUDE_DIRECTORIES PREPEND "/I \"")
+    list(TRANSFORM MIDL_INCLUDE_DIRECTORIES APPEND "\"")
+
+    list(APPEND MIDL_COMMAND ${MIDL_INCLUDE_DIRECTORIES})
 
     # COMPILER_DIR
     get_filename_component(COMPILER_DIR ${CMAKE_C_COMPILER} DIRECTORY)
