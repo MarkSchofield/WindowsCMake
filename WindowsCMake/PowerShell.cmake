@@ -33,18 +33,19 @@ include("${CMAKE_CURRENT_LIST_DIR}/WindowsCMakeCommon.cmake")
         execute_powershell(
             <script>
             [OUTPUT_VARIABLE <variable name>]
+            [RESULT_VARIABLE <variable name>]
         )
 ====================================================================================================================]]#
 function(execute_powershell INLINE_SCRIPT)
     windowscmake_find_powershell(POWERSHELL_PATH)
 
-    set(OPTIONS)
-    set(ONE_VALUE_KEYWORDS OUTPUT_VARIABLE)
-    set(MULTI_VALUE_KEYWORDS)
-
     if(NOT INLINE_SCRIPT)
         message(FATAL_ERROR "No script was specified.")
     endif()
+
+    set(OPTIONS)
+    set(ONE_VALUE_KEYWORDS OUTPUT_VARIABLE RESULT_VARIABLE)
+    set(MULTI_VALUE_KEYWORDS)
 
     cmake_parse_arguments(PARSE_ARGV 0 EXECUTE_POWERSHELL "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}")
 
@@ -56,12 +57,18 @@ function(execute_powershell INLINE_SCRIPT)
         COMMAND ${POWERSHELL_COMMAND}
         OUTPUT_VARIABLE POWERSHELL_OUTPUT
         ERROR_VARIABLE POWERSHELL_ERROR
+        RESULT_VARIABLE POWERSHELL_RESULT
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
     message(VERBOSE "POWERSHELL_OUTPUT = ${POWERSHELL_OUTPUT}")
     message(VERBOSE "POWERSHELL_ERROR = ${POWERSHELL_ERROR}")
+    message(VERBOSE "POWERSHELL_RESULT = ${POWERSHELL_RESULT}")
 
     if(EXECUTE_POWERSHELL_OUTPUT_VARIABLE)
         set(${EXECUTE_POWERSHELL_OUTPUT_VARIABLE} "${POWERSHELL_OUTPUT}" PARENT_SCOPE)
+    endif()
+
+    if(EXECUTE_POWERSHELL_RESULT_VARIABLE)
+        set(${EXECUTE_POWERSHELL_RESULT_VARIABLE} "${POWERSHELL_RESULT}" PARENT_SCOPE)
     endif()
 endfunction()
