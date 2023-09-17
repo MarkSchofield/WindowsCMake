@@ -1,14 +1,14 @@
 //---------------------------------------------------------------------------------------------------------------------
 //
 //---------------------------------------------------------------------------------------------------------------------
-#include <winrt/Windows.Foundation.Collections.h>
-#include <winrt/Windows.Web.Syndication.h>
-#include <winrt/RuntimeComponent.h>
 #include <fcntl.h>
 #include <io.h>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include <string_view>
+#include <winrt/RuntimeComponent.h>
+#include <winrt/Windows.Foundation.Collections.h>
+#include <winrt/Windows.Web.Syndication.h>
 
 using namespace winrt;
 using namespace Windows::Foundation;
@@ -26,7 +26,7 @@ int main()
         c.MyProperty(42);
         std::wcout << "c.MyProperty() = " << c.MyProperty() << std::endl;
 
-        Uri rssFeedUri{ L"https://www.engadget.com/rss.xml" };
+        Uri rssFeedUri{L"https://www.engadget.com/rss.xml"};
         SyndicationClient syndicationClient;
         SyndicationFeed syndicationFeed = syndicationClient.RetrieveFeedAsync(rssFeedUri).get();
         for (SyndicationItem syndicationItem : syndicationFeed.Items())
