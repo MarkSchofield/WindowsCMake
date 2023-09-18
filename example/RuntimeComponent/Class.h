@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Class.g.h"
 
@@ -13,11 +13,11 @@ namespace winrt::RuntimeComponent::implementation
 
         int32_t m_myProperty = 0;
     };
-}
+} // namespace winrt::RuntimeComponent::implementation
 
 namespace winrt::RuntimeComponent::factory_implementation
 {
     struct Class : ClassT<Class, implementation::Class>
     {
     };
-}
+} // namespace winrt::RuntimeComponent::factory_implementation

@@ -1,6 +1,6 @@
-﻿#include "pch.h"
 #include "Class.h"
 #include "Class.g.cpp"
+#include "pch.h"
 
 namespace winrt::RuntimeComponent::implementation
 {
@@ -13,4 +13,4 @@ namespace winrt::RuntimeComponent::implementation
     {
         m_myProperty = value;
     }
-}
+} // namespace winrt::RuntimeComponent::implementation
