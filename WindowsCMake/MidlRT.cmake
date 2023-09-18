@@ -37,12 +37,19 @@ set(MDMERGE_PLATFORM_RESPONSE_FILE "${CMAKE_BINARY_DIR}/mdmerge.platform.rsp")
 
 # Read the PLATFORM_REFERENCES from the WINDOWS_KITS_PLATFORM_PATH file.
 execute_powershell("
+$ErrorActionPreference = 'Stop'
 [xml]$Platform = Get-Content \"${WINDOWS_KITS_PLATFORM_PATH}\"
 $Platform.ApplicationPlatform.ContainedApiContracts.ApiContract |
     ForEach-Object { $_.name, $_.version }
 "
-    OUTPUT_VARIABLE PLATFORM_REFERENCES)
-string(REPLACE "\n" ";" PLATFORM_REFERENCES ${PLATFORM_REFERENCES})
+    OUTPUT_VARIABLE PLATFORM_REFERENCES
+    RESULT_VARIABLE POWERSHELL_RESULT
+    )
+if(NOT (POWERSHELL_RESULT STREQUAL "0"))
+    message(FATAL_ERROR "Unable to load: ${WINDOWS_KITS_PLATFORM_PATH}")
+endif()
+
+string(REPLACE "\n" ";" PLATFORM_REFERENCES "${PLATFORM_REFERENCES}")
 
 while(PLATFORM_REFERENCES)
     list(POP_FRONT PLATFORM_REFERENCES PLATFORM_REFERENCE_NAME)
