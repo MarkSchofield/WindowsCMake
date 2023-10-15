@@ -14,7 +14,7 @@ add_library(RuntimeComponent SHARED
 
 target_compile_features(RuntimeComponent
     PRIVATE
-        cxx_std_17
+        cxx_std_20
 )
 
 target_precompile_headers(RuntimeComponent
