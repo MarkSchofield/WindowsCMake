@@ -115,6 +115,10 @@ endfunction()
 function(_generateUnmergedWinMd TARGET IDL_FILES WINMD_FILES_VARIABLE)
     get_target_property(TARGET_SOURCE_DIR ${TARGET} SOURCE_DIR)
 
+    # COMPILER_DIR and COMPILER_NAME
+    get_filename_component(COMPILER_DIR ${CMAKE_C_COMPILER} DIRECTORY)
+    get_filename_component(COMPILER_NAME ${CMAKE_C_COMPILER} NAME)
+
     set(MIDL_COMMAND "")
     list(APPEND MIDL_COMMAND "\"${MIDL_COMPILER}\"")
     list(APPEND MIDL_COMMAND "@\"${MIDL_PLATFORM_RESPONSE_FILE}\"")
@@ -128,13 +132,11 @@ function(_generateUnmergedWinMd TARGET IDL_FILES WINMD_FILES_VARIABLE)
     list(APPEND MIDL_COMMAND /enum_class)
     list(APPEND MIDL_COMMAND /ns_prefix)
     list(APPEND MIDL_COMMAND /target NT60)
+    list(APPEND MIDL_COMMAND /cpp_cmd ${COMPILER_NAME})
     list(APPEND MIDL_COMMAND /nomidl)
     list(APPEND MIDL_COMMAND /I "\"${WINDOWS_KITS_INCLUDE_PATH}/winrt\"")
 
     list(JOIN MIDL_COMMAND " " MIDL_COMMAND_LINE)
-
-    # COMPILER_DIR
-    get_filename_component(COMPILER_DIR ${CMAKE_C_COMPILER} DIRECTORY)
 
     set(GENERATED_FILES)
 
