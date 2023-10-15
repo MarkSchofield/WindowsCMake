@@ -106,6 +106,12 @@ _generateMdMergePlatformResponseFile()
 #
 #----------------------------------------------------------------------------------------------------------------------
 function(enable_midlrt)
+    if(NOT ((CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") OR (CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")))
+        message(STATUS "CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")
+        message(STATUS "CMAKE_CXX_COMPILER_FRONTEND_VARIANT = ${CMAKE_CXX_COMPILER_FRONTEND_VARIANT}")
+        message(FATAL_ERROR "'enable_midlrt' is only supported with MSVC or an MSVC frontend.")
+    endif()
+
     cmake_language(EVAL CODE "cmake_language(DEFER CALL _process_target_midl [[${ARGV0}]])")
 endfunction()
 
@@ -307,4 +313,14 @@ function(_process_target_midl TARGET)
         PRIVATE
             "${CMAKE_CURRENT_BINARY_DIR}/Generated Files/module.g.cpp"
     )
+
+    # When using Clang, enable the 'cx16' target feature to add the _InterlockedCompareExchange128 intrinsic that the
+    # WinRT headers use
+    if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+        target_compile_options(${TARGET}
+            PRIVATE
+                -mcx16
+        )
+    endif()
+
 endfunction()
