@@ -106,6 +106,12 @@ _generateMdMergePlatformResponseFile()
 #
 #----------------------------------------------------------------------------------------------------------------------
 function(enable_midlrt)
+    if(NOT ((CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") OR (CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")))
+        message(STATUS "CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")
+        message(STATUS "CMAKE_CXX_COMPILER_FRONTEND_VARIANT = ${CMAKE_CXX_COMPILER_FRONTEND_VARIANT}")
+        message(FATAL_ERROR "'enable_midlrt' is only supported with MSVC or an MSVC frontend.")
+    endif()
+
     cmake_language(EVAL CODE "cmake_language(DEFER CALL _process_target_midl [[${ARGV0}]])")
 endfunction()
 
@@ -114,6 +120,10 @@ endfunction()
 #----------------------------------------------------------------------------------------------------------------------
 function(_generateUnmergedWinMd TARGET IDL_FILES WINMD_FILES_VARIABLE)
     get_target_property(TARGET_SOURCE_DIR ${TARGET} SOURCE_DIR)
+
+    # COMPILER_DIR and COMPILER_NAME
+    get_filename_component(COMPILER_DIR ${CMAKE_C_COMPILER} DIRECTORY)
+    get_filename_component(COMPILER_NAME ${CMAKE_C_COMPILER} NAME)
 
     set(MIDL_COMMAND "")
     list(APPEND MIDL_COMMAND "\"${MIDL_COMPILER}\"")
@@ -128,13 +138,11 @@ function(_generateUnmergedWinMd TARGET IDL_FILES WINMD_FILES_VARIABLE)
     list(APPEND MIDL_COMMAND /enum_class)
     list(APPEND MIDL_COMMAND /ns_prefix)
     list(APPEND MIDL_COMMAND /target NT60)
+    list(APPEND MIDL_COMMAND /cpp_cmd ${COMPILER_NAME})
     list(APPEND MIDL_COMMAND /nomidl)
     list(APPEND MIDL_COMMAND /I "\"${WINDOWS_KITS_INCLUDE_PATH}/winrt\"")
 
     list(JOIN MIDL_COMMAND " " MIDL_COMMAND_LINE)
-
-    # COMPILER_DIR
-    get_filename_component(COMPILER_DIR ${CMAKE_C_COMPILER} DIRECTORY)
 
     set(GENERATED_FILES)
 
@@ -152,6 +160,10 @@ function(_generateUnmergedWinMd TARGET IDL_FILES WINMD_FILES_VARIABLE)
 @echo off
 set PATH=%PATH%;${COMPILER_DIR}
 ${MIDL_COMMAND_LINE} /winmd \"${OUTPUT_WINMD_FILE}\" \"${IDL_FILE}\" /o \"${OUTPUT_WINMD_LOG}\"
+IF ERRORLEVEL 1 (
+    type ${OUTPUT_WINMD_LOG} 1>&2
+    exit /b 1
+)
 ")
 
         add_custom_command(
@@ -301,4 +313,14 @@ function(_process_target_midl TARGET)
         PRIVATE
             "${CMAKE_CURRENT_BINARY_DIR}/Generated Files/module.g.cpp"
     )
+
+    # When using Clang, enable the 'cx16' target feature to add the _InterlockedCompareExchange128 intrinsic that the
+    # WinRT headers use
+    if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+        target_compile_options(${TARGET}
+            PRIVATE
+                -mcx16
+        )
+    endif()
+
 endfunction()

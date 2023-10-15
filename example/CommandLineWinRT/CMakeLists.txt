@@ -9,7 +9,7 @@ add_executable(CommandLineWinRT
 
 target_compile_features(CommandLineWinRT
     PRIVATE
-        cxx_std_17
+        cxx_std_20
 )
 
 target_precompile_headers(CommandLineWinRT
