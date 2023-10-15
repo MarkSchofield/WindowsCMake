@@ -32,7 +32,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     endif()
 endif()
 
-if(NOT (CMAKE_CXX_COMPILER_ID STREQUAL Clang))
+if((CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC"))
     add_subdirectory(CommandLineWinRT)
     add_subdirectory(RuntimeComponent)
 endif()
