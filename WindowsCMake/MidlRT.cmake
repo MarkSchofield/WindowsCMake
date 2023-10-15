@@ -154,6 +154,10 @@ function(_generateUnmergedWinMd TARGET IDL_FILES WINMD_FILES_VARIABLE)
 @echo off
 set PATH=%PATH%;${COMPILER_DIR}
 ${MIDL_COMMAND_LINE} /winmd \"${OUTPUT_WINMD_FILE}\" \"${IDL_FILE}\" /o \"${OUTPUT_WINMD_LOG}\"
+IF ERRORLEVEL 1 (
+    type ${OUTPUT_WINMD_LOG} 1>&2
+    exit /b 1
+)
 ")
 
         add_custom_command(
