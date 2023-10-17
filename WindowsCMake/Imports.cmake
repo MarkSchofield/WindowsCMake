@@ -105,16 +105,10 @@ function(add_import_library TARGET_NAME)
         COMMENT "Generating ${TARGET_NAME}_library"
     )
 
-    add_library(${TARGET_NAME}
-        INTERFACE
-    )
+    add_library(${TARGET_NAME} SHARED IMPORTED)
 
-    add_dependencies(${TARGET_NAME}
-        ${TARGET_NAME}_library
-    )
-
-    target_link_libraries(${TARGET_NAME}
-        INTERFACE
-            ${LIB_FILE_PATH}
+    set_target_properties(${TARGET_NAME}
+        PROPERTIES
+            IMPORTED_IMPLIB ${LIB_FILE_PATH}
     )
 endfunction()
