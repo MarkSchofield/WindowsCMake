@@ -58,7 +58,7 @@ function(add_import_library TARGET_NAME)
 
     set(OPTIONS)
     set(ONE_VALUE_KEYWORDS NAME)
-    set(MULTI_VALUE_KEYWORDS EXPORTS)
+    set(MULTI_VALUE_KEYWORDS EXPORTS ORDINALEXPORTS)
 
     cmake_parse_arguments(PARSE_ARGV 0 IMPORT "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}")
 
@@ -71,6 +71,12 @@ function(add_import_library TARGET_NAME)
         "EXPORTS\n"
         "  ${IMPORT_EXPORTS}"
     )
+
+    while(IMPORT_ORDINALEXPORTS)
+        list(POP_FRONT IMPORT_ORDINALEXPORTS EXPORT_NAME)
+        list(POP_FRONT IMPORT_ORDINALEXPORTS EXPORT_ORDINAL)
+        list(APPEND DEF_FILE_CONTENTS "${EXPORT_NAME} ${EXPORT_ORDINAL}")
+    endwhile()
 
     file(WRITE "${DEF_FILE_PATH}.input" ${DEF_FILE_CONTENTS})
     configure_file("${DEF_FILE_PATH}.input" ${DEF_FILE_PATH} COPYONLY)
