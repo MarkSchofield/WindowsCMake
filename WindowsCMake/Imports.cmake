@@ -105,7 +105,7 @@ function(add_import_library TARGET_NAME)
         COMMENT "Generating ${TARGET_NAME}_library"
     )
 
-    add_library(${TARGET_NAME} SHARED IMPORTED)
+    add_library(${TARGET_NAME} SHARED IMPORTED GLOBAL)
 
     set_target_properties(${TARGET_NAME}
         PROPERTIES
