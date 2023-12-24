@@ -22,7 +22,7 @@ add_subdirectory(CommandLine)
 add_subdirectory(SharedLibrary)
 add_subdirectory(WindowsApplication)
 
-if((CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") AND (NOT (CMAKE_SYSTEM_PROCESSOR STREQUAL x86)))
+if((CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC") AND (NOT (CMAKE_SYSTEM_PROCESSOR STREQUAL x86)))
     add_subdirectory(CommandLineImportLibrary)
 endif()
 
