@@ -29,6 +29,12 @@ set(MIDL_1_0_PLATFORM_RESPONSE_FILE "${CMAKE_BINARY_DIR}/midl.1.0.platform.rsp")
 #
 #----------------------------------------------------------------------------------------------------------------------
 function(enable_midl)
+    if(NOT ((CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") OR (CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")))
+        message(STATUS "CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")
+        message(STATUS "CMAKE_CXX_COMPILER_FRONTEND_VARIANT = ${CMAKE_CXX_COMPILER_FRONTEND_VARIANT}")
+        message(FATAL_ERROR "'enable_midl' is only supported with MSVC or an MSVC frontend.")
+    endif()
+
     cmake_language(EVAL CODE "cmake_language(DEFER CALL _process_target_midl_1_0 [[${ARGV0}]])")
 endfunction()
 
@@ -37,6 +43,10 @@ endfunction()
 #----------------------------------------------------------------------------------------------------------------------
 function(_generateMidlOutput TARGET IDL_FILES MIDL_GENERATED_FILES)
     get_target_property(TARGET_SOURCE_DIR ${TARGET} SOURCE_DIR)
+
+    # COMPILER_DIR and COMPILER_NAME
+    get_filename_component(COMPILER_DIR ${CMAKE_C_COMPILER} DIRECTORY)
+    get_filename_component(COMPILER_NAME ${CMAKE_C_COMPILER} NAME)
 
     set(MIDL_COMMAND "")
     list(APPEND MIDL_COMMAND "\"${MIDL_COMPILER}\"")
@@ -48,6 +58,7 @@ function(_generateMidlOutput TARGET IDL_FILES MIDL_GENERATED_FILES)
     list(APPEND MIDL_COMMAND /newtlb)
     list(APPEND MIDL_COMMAND /robust)
     list(APPEND MIDL_COMMAND /target NT60)
+    list(APPEND MIDL_COMMAND /cpp_cmd ${COMPILER_NAME})
     list(APPEND MIDL_COMMAND /dlldata "DllData.c")
     list(APPEND MIDL_COMMAND /out "\"${CMAKE_CURRENT_BINARY_DIR}/Generated Files\"")
 
@@ -60,9 +71,6 @@ function(_generateMidlOutput TARGET IDL_FILES MIDL_GENERATED_FILES)
     list(TRANSFORM MIDL_INCLUDE_DIRECTORIES APPEND "\"")
 
     list(APPEND MIDL_COMMAND ${MIDL_INCLUDE_DIRECTORIES})
-
-    # COMPILER_DIR
-    get_filename_component(COMPILER_DIR ${CMAKE_C_COMPILER} DIRECTORY)
 
     set(GENERATED_FILES)
     list(APPEND GENERATED_FILES "${CMAKE_CURRENT_BINARY_DIR}/Generated Files/DllData.c")
