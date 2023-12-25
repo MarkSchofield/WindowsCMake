@@ -48,6 +48,14 @@ function(add_import_library TARGET_NAME)
         message(FATAL_ERROR "add_import_library only works with an MSVC compiler front-end.")
     endif()
 
+    if((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS "17.0"))
+        message(FATAL_ERROR "add_import_library only works with Clang version 17.0 and later")
+    endif()
+
+    if((CMAKE_C_COMPILER_ID STREQUAL "Clang") AND (CMAKE_C_COMPILER_VERSION VERSION_LESS "17.0"))
+        message(FATAL_ERROR "add_import_library only works with Clang version 17.0 and later")
+    endif()
+
     set(OPTIONS)
     set(ONE_VALUE_KEYWORDS NAME)
     set(MULTI_VALUE_KEYWORDS EXPORTS)
