@@ -27,7 +27,7 @@ int main(int /*argc*/, char** /*argv*/)
     {
         try
         {
-            std::cout << "Found NtCreateFile: " << &NtCreateFile;
+            std::cout << "Found NtCreateFile: " << reinterpret_cast<void*>(&NtCreateFile);
         }
         catch (const std::exception& ex)
         {

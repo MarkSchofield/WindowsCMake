@@ -44,8 +44,16 @@ include_guard()
 ====================================================================================================================]]#
 function(add_import_library TARGET_NAME)
 
-    if((NOT(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")) AND (NOT(CMAKE_C_COMPILER_ID STREQUAL "MSVC")))
-        message(FATAL_ERROR "add_import_library only works with an MSVC compiler.")
+    if((NOT(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")) AND (NOT(CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")))
+        message(FATAL_ERROR "add_import_library only works with an MSVC compiler front-end.")
+    endif()
+
+    if((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS "17.0"))
+        message(FATAL_ERROR "add_import_library only works with Clang version 17.0 and later")
+    endif()
+
+    if((CMAKE_C_COMPILER_ID STREQUAL "Clang") AND (CMAKE_C_COMPILER_VERSION VERSION_LESS "17.0"))
+        message(FATAL_ERROR "add_import_library only works with Clang version 17.0 and later")
     endif()
 
     set(OPTIONS)
