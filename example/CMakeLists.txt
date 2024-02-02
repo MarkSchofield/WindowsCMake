@@ -53,6 +53,7 @@ target_include_directories(wil
 
 add_subdirectory(CommandLineAsan)
 add_subdirectory(CommandLine)
+add_subdirectory(DWriteApplication)
 add_subdirectory(SharedLibrary)
 add_subdirectory(WindowsApplication)
 
