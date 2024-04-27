@@ -28,7 +28,7 @@
 #
 # | CMake Variable          | Description                                                                                                               |
 # |-------------------------|---------------------------------------------------------------------------------------------------------------------------|
-# | NINJA_VERSION           | The version of Ninja to download - if it can't be found. Defaults to 1.11.0.                                              |
+# | NINJA_VERSION           | The version of Ninja to download - if it can't be found. Defaults to 1.12.0.                                              |
 # | NINJA_ARCHIVE_HASH      | The hash of the Ninja archive, following the format of `string(<HASH>`. Defaults to the hash of the Ninja 1.10.2 archive. |
 # | TOOLCHAIN_TOOLS_PATH    | The path to download tools to. If not set, then tools will not be downloaded.                                             |
 # | NINJA_PATH              | The path to ninja program to use. Defaults not set.                                                                       |
@@ -39,8 +39,8 @@ if((NOT (CMAKE_GENERATOR STREQUAL Ninja)) AND (NOT (CMAKE_GENERATOR STREQUAL "Ni
 endif()
 
 if(NOT NINJA_VERSION)
-    set(NINJA_VERSION "1.11.0")
-    set(NINJA_ARCHIVE_HASH "SHA256=d0ee3da143211aa447e750085876c9b9d7bcdd637ab5b2c5b41349c617f22f3b")
+    set(NINJA_VERSION "1.12.0")
+    set(NINJA_ARCHIVE_HASH "SHA256=51d99be9ceea8835edf536d52d47fa4c316aa332e57f71a08df5bd059da11417")
 else()
     if(NOT NINJA_ARCHIVE_HASH)
         message(FATAL_ERROR "NINJA_VERSION is set to ${NINJA_VERSION}. NINJA_ARCHIVE_HASH must be set if NINJA_VERSION is set.")
