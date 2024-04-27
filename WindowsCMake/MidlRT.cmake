@@ -44,7 +44,7 @@ $Platform.ApplicationPlatform.ContainedApiContracts.ApiContract |
 "
     OUTPUT_VARIABLE PLATFORM_REFERENCES
     RESULT_VARIABLE POWERSHELL_RESULT
-    )
+)
 if(NOT (POWERSHELL_RESULT STREQUAL "0"))
     message(FATAL_ERROR "Unable to load: ${WINDOWS_KITS_PLATFORM_PATH}")
 endif()
