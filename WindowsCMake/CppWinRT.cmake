@@ -36,6 +36,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/NuGet.cmake")
             INPUT <spec>+
             [EXECUTABLE_PATH <path>]
             [PCH_NAME <pch name>]
+            [VERSON <version>]
             [OPTIMIZE]
         )
 
@@ -43,7 +44,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/NuGet.cmake")
 ====================================================================================================================]]#
 function(generate_winrt_projection)
     set(OPTIONS OPTIMIZE)
-    set(ONE_VALUE_KEYWORDS EXECUTABLE_PATH PCH_NAME)
+    set(ONE_VALUE_KEYWORDS EXECUTABLE_PATH PCH_NAME VERSION)
     set(MULTI_VALUE_KEYWORDS INPUT)
 
     cmake_parse_arguments(PARSE_ARGV 0 CPPWINRT "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}")
