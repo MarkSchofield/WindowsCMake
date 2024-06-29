@@ -58,9 +58,16 @@ function(_generateMidlOutput TARGET IDL_FILES MIDL_GENERATED_FILES)
     list(APPEND MIDL_COMMAND /newtlb)
     list(APPEND MIDL_COMMAND /robust)
     list(APPEND MIDL_COMMAND /target NT60)
-    list(APPEND MIDL_COMMAND /cpp_cmd ${COMPILER_NAME})
     list(APPEND MIDL_COMMAND /dlldata "DllData.c")
     list(APPEND MIDL_COMMAND /out "\"${CMAKE_CURRENT_BINARY_DIR}/Generated Files\"")
+
+    list(APPEND MIDL_COMMAND /cpp_cmd ${COMPILER_NAME})
+
+    if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
+        # Midl's use of the preprocessor parses files that logs clang warnings, so
+        # explicitly disabling them.
+        list(APPEND MIDL_COMMAND /cpp_opt "\"-Wno-undef -Wno-language-extension-token -Wno-unused-macros -Wno-nonportable-system-include-path -Wno-reserved-macro-identifier -Wno-nonportable-include-path /E\"")
+    endif()
 
     # Build the MIDL_INCLUDE_DIRECTORIES. They are:
     #   1) The 'INCLUDE_DIRECTORIES' from the TARGET
