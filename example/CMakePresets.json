@@ -31,7 +31,7 @@
         "CMAKE_TOOLCHAIN_FILE": "./WindowsToolchain/Windows.MSVC.toolchain.cmake",
         "CMAKE_VS_VERSION_PRERELEASE": "ON",
         "VS_EXPERIMENTAL_MODULE": "ON",
-        "VS_USE_SPECTRE_MITIGATION_RUNTIME": "ON"
+        "VS_USE_SPECTRE_MITIGATION_RUNTIME": "OFF"
       },
       "binaryDir": "${sourceDir}/__output/${presetName}"
     },
