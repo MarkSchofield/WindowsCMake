@@ -49,7 +49,7 @@ function(generate_winrt_projection)
     cmake_parse_arguments(PARSE_ARGV 0 CPPWINRT "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}")
 
     if(NOT CPPWINRT_VERSION)
-        set(CPPWINRT_VERSION "2.0.230524.4")
+        set(CPPWINRT_VERSION "2.0.240405.15")
     endif()
 
     install_nuget_package(Microsoft.Windows.CppWinRT ${CPPWINRT_VERSION} NUGET_MICROSOFT_WINDOWS_CPPWINRT
