@@ -105,8 +105,17 @@ endfunction()
             [OPTIMIZE]
         )
 
-    The 'INPUTS' will be used to generate the projection, and can be any input to the cppwinrt tooling. If the INPUTS
-    includes a path to a .winmd file, the file will be a dependency of the target that generates the projection.
+    The 'INPUTS' will be used to generate the projection, and can be of the form:
+        * any value accepted by the cppwinrt tooling:
+            * path                Path to winmd file or recursively scanned folder
+            * local               Local %WinDir%\System32\WinMetadata folder
+            * sdk[+]              Current version of Windows SDK [with extensions]
+            * 10.0.12345.0[+]     Specific version of Windows SDK [with extensions]
+        * or,
+            * nuget:10.0.19041.2  Specific version of the 'Microsoft.Windows.SDK.Contracts'
+
+    If the INPUTS includes a path to a .winmd file, the file will be a dependency of the target that generates the
+    projection.
 
     The DEPS parameter is optional, but may contain target names of dependencies. These will be added to the
     target_link_libraries of this projection target, and any referenced cppwinrt inputs will be used for the
@@ -137,6 +146,16 @@ function(add_cppwinrt_projection TARGET_NAME)
 
     if(NOT CPPWINRT_PROJECTION_ROOT_PATH)
         set(CPPWINRT_PROJECTION_ROOT_PATH ${CMAKE_BINARY_DIR}/__cppwinrt)
+    endif()
+
+    if(CPPWINRT_INPUTS MATCHES [[^nuget\:(.*)]])
+        message(VERBOSE "add_cppwinrt_projection: NuGet version '${CMAKE_MATCH_1}' specified.")
+
+        install_nuget_package(Microsoft.Windows.SDK.Contracts "${CMAKE_MATCH_1}" NUGET_MICROSOFT_WINDOWS_SDK_CONTRACTS
+            PACKAGESAVEMODE nuspec
+            DEPENDENCYVERSION Ignore
+        )
+        set(CPPWINRT_INPUTS "${NUGET_MICROSOFT_WINDOWS_SDK_CONTRACTS}/ref/netstandard2.0")
     endif()
 
     set(CPPWINRT_REFS)
