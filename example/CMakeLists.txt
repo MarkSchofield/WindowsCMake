@@ -9,7 +9,7 @@ include(${WINDOWSCMAKE_DIR}/CppWinRT.cmake)
 
 add_cppwinrt_projection(CppWinRT
     INPUTS
-        ${CMAKE_SYSTEM_VERSION}
+        nuget:${CPPWINRT_PROJECTION_NUGET_VERSION}
     OPTIMIZE
 )
 
