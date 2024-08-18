@@ -103,8 +103,15 @@ function(_generateMidlOutput TARGET IDL_FILES MIDL_GENERATED_FILES)
 
         file(GENERATE OUTPUT ${MIDL_COMMAND_SCRIPT} CONTENT "\
 @echo off
+setlocal enabledelayedexpansion
 set PATH=%PATH%;${COMPILER_DIR}
-${MIDL_COMMAND_LINE}
+${MIDL_COMMAND_LINE} > ${MIDL_COMMAND_SCRIPT}.log 2>&1
+IF ERRORLEVEL 1 (
+    SET LOGFILE=${MIDL_COMMAND_SCRIPT}.log
+    SET LOGFILE=!LOGFILE:/=\\!
+    type !LOGFILE!
+    exit /b 1
+)
 ")
 
         add_custom_command(
@@ -112,6 +119,7 @@ ${MIDL_COMMAND_LINE}
             COMMAND ${MIDL_COMMAND_SCRIPT}
             MAIN_DEPENDENCY ${IDL_FILE}
             DEPENDS ${MIDL_COMMAND_SCRIPT}
+            BYPRODUCTS ${MIDL_COMMAND_SCRIPT}.log
             COMMENT "Processing ${IDL_FILE}"
             WORKING_DIRECTORY ${TARGET_SOURCE_DIR}
         )
