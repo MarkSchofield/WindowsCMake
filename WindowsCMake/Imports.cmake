@@ -69,7 +69,7 @@ function(add_import_library TARGET_NAME)
     list(APPEND DEF_FILE_CONTENTS
         "LIBRARY ${IMPORT_NAME}\n"
         "EXPORTS\n"
-        "${IMPORT_EXPORTS}"
+        "  ${IMPORT_EXPORTS}"
     )
 
     file(WRITE "${DEF_FILE_PATH}.input" ${DEF_FILE_CONTENTS})
@@ -90,9 +90,9 @@ function(add_import_library TARGET_NAME)
         message(FATAL_ERROR "Unable to identify the library machine type from CMAKE_SYSTEM_PROCESSOR ${CMAKE_SYSTEM_PROCESSOR}")
     endif()
 
-    set(LIB_PROPERTIES "")
-    list(APPEND LIB_PROPERTIES
-        ${CMAKE_AR}
+    set(LIB_COMMAND "")
+    list(APPEND LIB_COMMAND
+        "\"${CMAKE_AR}\""
         "\"/DEF:${DEF_FILE_PATH}\""
         "\"/OUT:${LIB_FILE_PATH}\""
         "/MACHINE:${LIB_MACHINE}"
@@ -100,9 +100,28 @@ function(add_import_library TARGET_NAME)
         /nologo
     )
 
+    set(LIB_COMMAND_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/lib.${TARGET_NAME}.cmd)
+    list(JOIN LIB_COMMAND " " LIB_COMMAND_LINE)
+
+    file(GENERATE OUTPUT ${LIB_COMMAND_SCRIPT} CONTENT "\
+@echo off
+setlocal enabledelayedexpansion
+${LIB_COMMAND_LINE} > ${LIB_COMMAND_SCRIPT}.log 2>&1
+findstr /spin /c:warning /c:error ${LIB_COMMAND_SCRIPT}.log > nul
+if %errorlevel% EQU 0 (
+    echo ${LIB_COMMAND_LINE}
+    SET LOGFILE=${LIB_COMMAND_SCRIPT}.log
+    SET LOGFILE=!LOGFILE:/=\\!
+
+    type !LOGFILE! 1>&2
+    exit /b 1
+)
+exit /b 0
+")
+
     add_custom_command(
         OUTPUT ${LIB_FILE_PATH}
-        COMMAND ${LIB_PROPERTIES}
+        COMMAND ${LIB_COMMAND_SCRIPT}
         DEPENDS ${DEF_FILE_PATH}
         COMMENT "Generating ${TARGET_NAME}.lib"
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
