@@ -134,6 +134,10 @@ exit /b 0
 
     add_library(${TARGET_NAME} SHARED IMPORTED GLOBAL)
 
+    add_dependencies(${TARGET_NAME}
+        ${TARGET_NAME}_library
+    )
+
     set_target_properties(${TARGET_NAME}
         PROPERTIES
             IMPORTED_IMPLIB ${LIB_FILE_PATH}
