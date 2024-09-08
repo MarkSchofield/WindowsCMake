@@ -202,7 +202,7 @@ function(add_cppwinrt_projection TARGET_NAME)
     #   * local
     #   * sdk[+]
     #   * 10.0.12345.0[+]
-    # add it as a dependency.
+    # add it as a dependency. If the item is a folder, add the recursively glob'd '*.winmd' files as dependencies.
     set(CPPWINRT_DEPENDS)
     foreach(CPPWINRT_INPUT IN LISTS CPPWINRT_INPUTS)
         if((CPPWINRT_INPUT STREQUAL "local") OR
@@ -211,6 +211,14 @@ function(add_cppwinrt_projection TARGET_NAME)
             message(VERBOSE "add_cppwinrt_projection: CPPWINRT_INPUT = ${CPPWINRT_INPUT}")
             continue()
         endif()
+
+        if(IS_DIRECTORY "${CPPWINRT_INPUT}")
+            file(GLOB_RECURSE CPPWINRT_INPUT_GLOB "${CPPWINRT_INPUT}/*.winmd")
+            message(VERBOSE "add_cppwinrt_projection: CPPWINRT_INPUT = ${CPPWINRT_INPUT_GLOB} (dependency)")
+            list(APPEND CPPWINRT_DEPENDS ${CPPWINRT_INPUT_GLOB})
+            continue()
+        endif()
+
         message(VERBOSE "add_cppwinrt_projection: CPPWINRT_INPUT = ${CPPWINRT_INPUT} (dependency)")
         list(APPEND CPPWINRT_DEPENDS ${CPPWINRT_INPUT})
     endforeach()

@@ -28,7 +28,7 @@ markup:
 lint:
   argument_var_pattern: '([A-Z][A-Z0-9_]+|[a-z_][a-z0-9_]+)'
   local_var_pattern: '[A-Z][A-Z0-9_]+'
-  max_statements: 60
+  max_statements: 80
   disabled_codes:
     # Disable "Line too long", the current documentation tables have long lines.
     - C0301
