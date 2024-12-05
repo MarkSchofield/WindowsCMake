@@ -80,13 +80,17 @@ endfunction()
 ====================================================================================================================]]#
 function(find_certificate)
     set(OPTIONS)
-    set(ONE_VALUE_KEYWORDS SUBJECT OUTPUT_THUMBPRINT)
+    set(ONE_VALUE_KEYWORDS SUBJECT FRIENDLY_NAME OUTPUT_THUMBPRINT)
     set(MULTI_VALUE_KEYWORDS)
 
     cmake_parse_arguments(PARSE_ARGV 0 FIND "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}")
 
     set(FIND_SCRIPT "Get-ChildItem Cert:/CurrentUser/My | ")
     string(APPEND FIND_SCRIPT "Where-Object { $_.EnhancedKeyUsageList.ObjectId -eq '1.3.6.1.5.5.7.3.3' } | ")
+
+    if(FIND_FRIENDLY_NAME)
+        string(APPEND FIND_SCRIPT "Where-Object { $_.FriendlyName -eq '${FIND_FRIENDLY_NAME}' } | ")
+    endif()
 
     if(FIND_SUBJECT)
         string(APPEND FIND_SCRIPT "Where-Object { $_.Subject -eq '${FIND_SUBJECT}' } | ")
@@ -139,7 +143,7 @@ function(sign TARGET)
     list(APPEND SIGNTOOL_COMMAND "${SIGN_OUTPUT}")
 
     list(JOIN SIGNTOOL_COMMAND " " SIGNTOOL_COMMAND_LINE)
-    set(SIGNTOOL_COMMAND_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/sign.cmd)
+    set(SIGNTOOL_COMMAND_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/sign_${TARGET}.cmd)
     file(GENERATE OUTPUT ${SIGNTOOL_COMMAND_SCRIPT} CONTENT "\
 @echo off
 ${SIGNTOOL_COMMAND_LINE}
