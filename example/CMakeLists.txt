@@ -18,6 +18,18 @@ add_compile_definitions(
     _UNICODE
 )
 
+# Add 'IMPORTED' libraries for NuGet dependencies.
+#
+include(${WINDOWSCMAKE_DIR}/NuGet.cmake)
+install_nuget_package("Microsoft.Windows.ImplementationLibrary" "1.0.240803.1" NUGET_MICROSOFT_WINDOWS_IMPLEMENTATIONLIBRARY)
+
+add_library(wil INTERFACE IMPORTED)
+
+target_include_directories(wil
+    INTERFACE
+        ${NUGET_MICROSOFT_WINDOWS_IMPLEMENTATIONLIBRARY}/include
+    )
+
 add_subdirectory(CommandLine)
 add_subdirectory(SharedLibrary)
 add_subdirectory(WindowsApplication)
