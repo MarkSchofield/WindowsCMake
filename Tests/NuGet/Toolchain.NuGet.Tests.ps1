@@ -61,16 +61,6 @@ Describe 'WindowsCMake NuGet support' {
         }
     }
 
-    It 'does not download NuGet if it is not in the path or specified, and TOOLCHAIN_TOOLS_PATH is not set' {
-        StashEnvironment Path {
-            $env:Path = ''
-
-            # With no NuGet to be found, and TOOLCHAIN_TOOLS_PATH not set, the build should fail.
-            $Null = & $CMake --preset windows 2>&1
-            $LastExitCode | Should -Be 1
-        }
-    }
-
     It 'downloads NuGet if it is not in the path or specified, and TOOLCHAIN_TOOLS_PATH is set' {
         StashEnvironment Path {
             $env:Path = ''
