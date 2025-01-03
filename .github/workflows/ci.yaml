@@ -72,10 +72,6 @@ jobs:
           fetch-depth: 0
           lfs: true
           submodules: true
-      - name: Install Ninja
-        shell: pwsh
-        run: |
-          choco install ninja
       - name: CMake Configure ${{ matrix.buildPreset }}
         shell: pwsh
         run: |
