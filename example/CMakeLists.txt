@@ -29,12 +29,6 @@ if(((CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") AND (NOT (CMAKE_SYSTEM_PROCESSOR STR
     add_subdirectory(CommandLineImportLibrary)
 endif()
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    if((CMAKE_SYSTEM_PROCESSOR STREQUAL AMD64) OR (CMAKE_SYSTEM_PROCESSOR STREQUAL X86))
-        add_subdirectory(CommandLineModule)
-    endif()
-endif()
-
 if((CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC"))
     add_subdirectory(CommandLineWinRT)
     add_subdirectory(RuntimeComponent)
