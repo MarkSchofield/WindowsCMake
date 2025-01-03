@@ -1,3 +1,3 @@
-[submodule "example/WindowsToolchain"]
-	path = example/WindowsToolchain
+[submodule "example/Build/WindowsToolchain"]
+	path = example/Build/WindowsToolchain
 	url = https://github.com/MarkSchofield/WindowsToolchain
