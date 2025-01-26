@@ -20,6 +20,10 @@
 #include <winrt/Windows.Foundation.Collections.h>
 #include <winrt/Windows.UI.Xaml.Interop.h>
 
+// Include the code for 'Microsoft::Windows::ApplicationModel::DynamicDependency::Bootstrap'
+// to add a dynamic dependency on the Store-distributed runtime.
+#include <MddBootstrap.h>
+
 using namespace winrt::Microsoft::UI::Xaml;
 using namespace winrt::Microsoft::UI::Xaml::Controls;
 using namespace winrt::Microsoft::UI::Xaml::XamlTypeInfo;
@@ -85,34 +89,7 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
     try
     {
         winrt::init_apartment(winrt::apartment_type::single_threaded);
-
-        HRESULT hr{};
-
-        // Hook up dynamic dependencies
-        wil::unique_process_heap_ptr<wchar_t> packageDependencyId;
-        {
-            constexpr PSID user = nullptr;
-            const wchar_t* const packageFamilyName = WINDOWSAPPSDK_RUNTIME_PACKAGE_FRAMEWORK_PACKAGEFAMILYNAME_W;
-            constexpr PACKAGE_VERSION minVersion = PackageVersion(WINDOWSAPPSDK_RELEASE_MAJOR, WINDOWSAPPSDK_RELEASE_MINOR);
-            constexpr PackageDependencyProcessorArchitectures packageDependencyProcessorArchitectures = PackageDependencyProcessorArchitectures_X64;
-            constexpr PackageDependencyLifetimeKind lifetimeKind = PackageDependencyLifetimeKind_Process;
-            const wchar_t* const lifetimeArtifact = nullptr;
-            constexpr CreatePackageDependencyOptions options = CreatePackageDependencyOptions_None;
-
-            hr = ::TryCreatePackageDependency(
-                user, packageFamilyName, minVersion, packageDependencyProcessorArchitectures, lifetimeKind, lifetimeArtifact, options, wil::out_param(packageDependencyId));
-            THROW_IF_FAILED(hr);
-        }
-
-        wil::unique_package_dependency_context packageDependencyContext;
-        wil::unique_process_heap_ptr<wchar_t> packageFullName;
-        {
-            const std::int32_t rank{0};
-            const AddPackageDependencyOptions options{AddPackageDependencyOptions_None};
-
-            hr = ::AddPackageDependency(packageDependencyId.get(), rank, options, wil::out_param(packageDependencyContext), wil::out_param(packageFullName));
-            THROW_IF_FAILED(hr);
-        }
+        auto initializationScope = Microsoft::Windows::ApplicationModel::DynamicDependency::Bootstrap::Initialize();
 
         Application::Start([](const ApplicationInitializationCallbackParams& parameters) { winrt::make<App>(); });
     }
