@@ -28,7 +28,7 @@ add_library(wil INTERFACE IMPORTED)
 target_include_directories(wil
     INTERFACE
         ${NUGET_MICROSOFT_WINDOWS_IMPLEMENTATIONLIBRARY}/include
-    )
+)
 
 add_subdirectory(CommandLine)
 add_subdirectory(SharedLibrary)
