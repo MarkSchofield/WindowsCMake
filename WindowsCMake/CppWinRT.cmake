@@ -235,7 +235,7 @@ function(add_cppwinrt_projection TARGET_NAME)
         ${CPPWINRT_OUTPUT_FILE}
     )
 
-    target_include_directories(${TARGET_NAME} BEFORE
+    target_include_directories(${TARGET_NAME} SYSTEM BEFORE
         INTERFACE
             ${CPPWINRT_OUTPUT}
     )
