@@ -33,8 +33,5 @@ set_source_files_properties(WinUIApplication.rc
     OBJECT_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/small.ico;${CMAKE_CURRENT_LIST_DIR}/WinUIApplication.ico"
 )
 
-add_custom_command(TARGET WinUIApplication POST_BUILD
-    COMMAND "${CMAKE_COMMAND};-E;$<IF:$<BOOL:$<TARGET_RUNTIME_DLLS:WinUIApplication>>,copy;$<TARGET_RUNTIME_DLLS:WinUIApplication>;$<TARGET_FILE_DIR:WinUIApplication>,true>"
-    COMMAND_EXPAND_LISTS
-    COMMENT "Copying runtime dependencies"
-)
+# Add a 'post build' step to copy 'TARGET_RUNTIME_DLLS' into the 'TARGET_FILE_DIR'.
+post_build_copy_runtime_dlls(WinUIApplication)

@@ -5,6 +5,14 @@ cmake_minimum_required(VERSION 3.20)
 
 project(WindowsCMakeExample)
 
+macro(post_build_copy_runtime_dlls TARGET)
+    add_custom_command(TARGET ${TARGET} POST_BUILD
+    COMMENT "Copying '${TARGET}' dependencies"
+    COMMAND "${CMAKE_COMMAND};-E;$<IF:$<BOOL:$<TARGET_RUNTIME_DLLS:${TARGET}>>,copy;$<TARGET_RUNTIME_DLLS:${TARGET}>;$<TARGET_FILE_DIR:${TARGET}>,true>"
+    COMMAND_EXPAND_LISTS
+    )
+endmacro()
+
 include(${WINDOWSCMAKE_DIR}/CppWinRT.cmake)
 
 add_cppwinrt_projection(CppWinRT
