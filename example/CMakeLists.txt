@@ -13,6 +13,18 @@ macro(post_build_copy_runtime_dlls TARGET)
     )
 endmacro()
 
+# Enable ASAN support.
+#
+# If 'ENABLE_ASAN' is enabled, include '${WINDOWSCMAKE_DIR}/Asan.cmake' which will define the 'WindowsCMakeAsan'
+# target. 'WindowsCMakeAsan' defines the compiler and linker options for ASAN, and adds the necessary DLLs to
+# TARGET_RUNTIME_DLLS. By specifying 'WindowsCMakeAsan' to 'link_libraries', all targets will depend on
+# 'WindowsCMakeAsan' by default. Targets can opt-out by setting the 'ENABLE_ASAN' target property to 'OFF'.
+if(ENABLE_ASAN)
+    include(${WINDOWSCMAKE_DIR}/Asan.cmake)
+
+    link_libraries(WindowsCMakeAsan)
+endif()
+
 include(${WINDOWSCMAKE_DIR}/CppWinRT.cmake)
 
 add_cppwinrt_projection(CppWinRT
