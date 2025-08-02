@@ -22,8 +22,5 @@ target_link_libraries(CommandLineWinRT
         RuntimeComponentCppWinRT
 )
 
-add_custom_command(TARGET CommandLineWinRT POST_BUILD
-  COMMENT "Copying 'CommandLineWinRT' dependencies"
-  COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:CommandLineWinRT> $<TARGET_FILE_DIR:CommandLineWinRT>
-  COMMAND_EXPAND_LISTS
-)
+# Add a 'post build' step to copy 'TARGET_RUNTIME_DLLS' into the 'TARGET_FILE_DIR'.
+post_build_copy_runtime_dlls(CommandLineWinRT)
