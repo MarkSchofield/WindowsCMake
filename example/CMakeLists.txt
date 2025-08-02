@@ -38,6 +38,7 @@ target_include_directories(wil
         ${NUGET_MICROSOFT_WINDOWS_IMPLEMENTATIONLIBRARY}/include
 )
 
+add_subdirectory(CommandLineAsan)
 add_subdirectory(CommandLine)
 add_subdirectory(SharedLibrary)
 add_subdirectory(WindowsApplication)
