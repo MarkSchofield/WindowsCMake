@@ -25,6 +25,7 @@ if(ENABLE_ASAN)
     link_libraries(WindowsCMakeAsan)
 endif()
 
+include(${WINDOWSCMAKE_DIR}/ClangFormat.cmake)
 include(${WINDOWSCMAKE_DIR}/CppWinRT.cmake)
 
 add_cppwinrt_projection(CppWinRT
