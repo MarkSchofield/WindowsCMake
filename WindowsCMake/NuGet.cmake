@@ -85,6 +85,7 @@ endfunction()
             <package version>
             <variable name>
             [PRERELEASE <ON|OFF>]
+            [FRAMEWORK <framework>]
             [CONFIG_FILE <config file path>]
             [PACKAGESAVEMODE <nuspec|nupkg>]
             [DEPENDENCYVERSION <Lowest|HighestPatch|HighestMinor|Highest|Ignore>]
@@ -100,7 +101,7 @@ endfunction()
 ====================================================================================================================]]#
 function(install_nuget_package NUGET_PACKAGE_NAME NUGET_PACKAGE_VERSION VARIABLE_NAME)
     set(OPTIONS)
-    set(ONE_VALUE_KEYWORDS CONFIG_FILE PRERELEASE PACKAGESAVEMODE DEPENDENCYVERSION)
+    set(ONE_VALUE_KEYWORDS CONFIG_FILE FRAMEWORK PRERELEASE PACKAGESAVEMODE DEPENDENCYVERSION)
     set(MULTI_VALUE_KEYWORDS)
 
     cmake_parse_arguments(PARSE_ARGV 3 NUGET "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}")
@@ -125,6 +126,10 @@ function(install_nuget_package NUGET_PACKAGE_NAME NUGET_PACKAGE_VERSION VARIABLE
 
         if(DEFINED NUGET_CONFIG_FILE)
             list(APPEND NUGET_COMMAND -ConfigFile ${NUGET_CONFIG_FILE})
+        endif()
+
+        if(DEFINED NUGET_FRAMEWORK)
+            list(APPEND NUGET_COMMAND -Framework ${NUGET_FRAMEWORK})
         endif()
 
         if(DEFINED NUGET_PACKAGESAVEMODE)
