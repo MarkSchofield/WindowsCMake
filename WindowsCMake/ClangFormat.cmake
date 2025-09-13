@@ -54,8 +54,17 @@ function(add_clang_format)
         )
     endif()
 
+    if(NOT (DEFINED CLANG_FORMAT_FILE_EXTENSIONS))
+        set(CLANG_FORMAT_FILE_EXTENSIONS ${CMAKE_CXX_SOURCE_FILE_EXTENSIONS})
+        list(APPEND CLANG_FORMAT_FILE_EXTENSIONS ${CMAKE_C_SOURCE_FILE_EXTENSIONS})
+        list(APPEND CLANG_FORMAT_FILE_EXTENSIONS h H hpp HPP hxx HXX)
+    endif()
+
+    list(TRANSFORM CLANG_FORMAT_FILE_EXTENSIONS PREPEND "*.")
+    list(JOIN CLANG_FORMAT_FILE_EXTENSIONS " " CLANG_FORMAT_WILDCARDS)
+
     set(CLANG_FORMAT_COMMAND "              \
-git ls-files *.h *.cpp |                    \
+git ls-files ${CLANG_FORMAT_WILDCARDS} |    \
     ForEach-Object -Parallel {              \
         & '${CLANG_FORMAT_PATH}' -i $$_     \
     }                                       \
