@@ -29,9 +29,9 @@ set(MIDL_1_0_PLATFORM_RESPONSE_FILE "${CMAKE_BINARY_DIR}/midl.1.0.platform.rsp")
 #
 #----------------------------------------------------------------------------------------------------------------------
 function(enable_midl)
-    if(NOT ((CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") OR (CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")))
-        message(STATUS "CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")
-        message(STATUS "CMAKE_CXX_COMPILER_FRONTEND_VARIANT = ${CMAKE_CXX_COMPILER_FRONTEND_VARIANT}")
+    if(NOT ((CMAKE_C_COMPILER_ID STREQUAL "MSVC") OR (CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")))
+        message(STATUS "CMAKE_C_COMPILER_ID = ${CMAKE_C_COMPILER_ID}")
+        message(STATUS "CMAKE_C_COMPILER_FRONTEND_VARIANT = ${CMAKE_C_COMPILER_FRONTEND_VARIANT}")
         message(FATAL_ERROR "'enable_midl' is only supported with MSVC or an MSVC frontend.")
     endif()
 
