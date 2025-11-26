@@ -60,10 +60,16 @@ jobs:
           - Release
         buildPreset:
           - windows-msvc-x64
+          - windows-msvc-x64+asan
           - windows-msvc-x86
           - windows-msvc-arm64
           - windows-clang-x64
+          - windows-clang-x64+asan
           - windows-clangcl-x64
+          - windows-clangcl-x64+asan
+        exclude:
+          - buildPreset: windows-clangcl-x64+asan # ASan not supported with clangcl on Debug builds.
+            configuration: Debug
     runs-on: windows-latest
     steps:
       - name: Checkout

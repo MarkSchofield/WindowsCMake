@@ -50,8 +50,11 @@ function(windowscmake_add_asan_target)
         set(ASAN_PLATFORM i386)
     endif()
 
+    # When specifying the ASAN_DLL_PATH, the DLL is available in the _host_ architecture folder for the architecture
+    # being targeted - as a result `Host${CMAKE_VS_PLATFORM_TOOLSET_ARCHITECTURE}` is used, and *not*
+    # `Host${CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE}`
     set(ASAN_LIB_PATH "${VS_TOOLSET_PATH}/lib/${CMAKE_VS_PLATFORM_TOOLSET_ARCHITECTURE}")
-    set(ASAN_DLL_PATH "${VS_TOOLSET_PATH}/bin/Host${CMAKE_VS_PLATFORM_TOOLSET_HOST_ARCHITECTURE}/${CMAKE_VS_PLATFORM_TOOLSET_ARCHITECTURE}")
+    set(ASAN_DLL_PATH "${VS_TOOLSET_PATH}/bin/Host${CMAKE_VS_PLATFORM_TOOLSET_ARCHITECTURE}/${CMAKE_VS_PLATFORM_TOOLSET_ARCHITECTURE}")
 
     if((CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") OR (CMAKE_C_COMPILER_ID STREQUAL "MSVC"))
         set(ASAN_LIB "${ASAN_LIB_PATH}/VCAsan.lib")
