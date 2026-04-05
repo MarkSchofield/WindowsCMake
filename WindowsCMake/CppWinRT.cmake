@@ -101,6 +101,7 @@ endfunction()
             INPUTS <spec>+
             [DEPS <spec>+]
             [VERSION <C++/WinRT version>]
+            [EXECUTABLE_PATH <path>]
             [PROJECTION_ROOT_PATH <path>]
             [OPTIMIZE]
         )
@@ -121,7 +122,14 @@ endfunction()
     target_link_libraries of this projection target, and any referenced cppwinrt inputs will be used for the
     -ref parameter to cppwinrt when generating this target's projection.
 
-    The VERSION parameter is optional, but if not specified the CPPWINRT_VERSION must be set.
+    VERSION or EXECUTABLE_PATH can be used to specify the cppwinrt executable to use when generating the projection:
+        * If VERSION is specified, the Microsoft.Windows.CppWinRT NuGet package will be installed, and the cppwinrt
+            executable from that version of the package will be used. VERSION will default to CPPWINRT_VERSION if the
+            variable is set.
+        * If EXECUTABLE_PATH is specified, that cppwinrt executable will be used. EXECUTABLE_PATH will default to
+            CPPWINRT_EXECUTABLE_PATH if the variable is set.
+
+    EXECUTABLE_PATH will be preferred over VERSION if both are specified.
 
     The PROJECTION_ROOT_PATH is optional. If not specified, and CPPWINRT_PROJECTION_ROOT_PATH is set, then the value of
     CPPWINRT_PROJECTION_ROOT_PATH will be used. If no value for PROJECTION_ROOT_PATH is specified, it will be defaulted
@@ -131,17 +139,33 @@ endfunction()
 ====================================================================================================================]]#
 function(add_cppwinrt_projection TARGET_NAME)
     set(OPTIONS OPTIMIZE)
-    set(ONE_VALUE_KEYWORDS PROJECTION_ROOT_PATH VERSION PCH_NAME)
+    set(ONE_VALUE_KEYWORDS EXECUTABLE_PATH PROJECTION_ROOT_PATH VERSION PCH_NAME)
     set(MULTI_VALUE_KEYWORDS INPUTS DEPS)
 
     if(NOT TARGET_NAME)
         message(FATAL_ERROR "add_cppwinrt_projection called with incorrect arguments: a target name is required.")
     endif()
 
+    if(CPPWINRT_EXECUTABLE_PATH)
+        set(DEFAULT_CPPWINRT_EXECUTABLE_PATH "${CPPWINRT_EXECUTABLE_PATH}")
+    endif()
+
+    if(CPPWINRT_VERSION)
+        set(DEFAULT_CPPWINRT_VERSION "${CPPWINRT_VERSION}")
+    endif()
+
     cmake_parse_arguments(PARSE_ARGV 1 CPPWINRT "${OPTIONS}" "${ONE_VALUE_KEYWORDS}" "${MULTI_VALUE_KEYWORDS}")
 
-    if(NOT CPPWINRT_VERSION)
-        message(FATAL_ERROR "add_cppwinrt_projection: CPPWINRT_VERSION must be specified.")
+    if((NOT CPPWINRT_VERSION) AND (DEFAULT_CPPWINRT_VERSION))
+        set(CPPWINRT_VERSION "${DEFAULT_CPPWINRT_VERSION}")
+    endif()
+
+    if((NOT CPPWINRT_EXECUTABLE_PATH) AND (DEFAULT_CPPWINRT_EXECUTABLE_PATH))
+        set(CPPWINRT_EXECUTABLE_PATH "${DEFAULT_CPPWINRT_EXECUTABLE_PATH}")
+    endif()
+
+    if((NOT CPPWINRT_VERSION) AND (NOT CPPWINRT_EXECUTABLE_PATH))
+        message(FATAL_ERROR "add_cppwinrt_projection: Either VERSION or EXECUTABLE_PATH must be specified, or default variables CPPWINRT_VERSION or CPPWINRT_EXECUTABLE_PATH must be set.")
     endif()
 
     if(NOT CPPWINRT_PROJECTION_ROOT_PATH)
@@ -173,16 +197,18 @@ function(add_cppwinrt_projection TARGET_NAME)
     message(VERBOSE "add_cppwinrt_projection: CPPWINRT_VERSION = ${CPPWINRT_VERSION}")
     message(VERBOSE "add_cppwinrt_projection: CPPWINRT_PROJECTION_ROOT_PATH = ${CPPWINRT_PROJECTION_ROOT_PATH}")
 
-    # Install the Microsoft.Windows.CppWinRT NuGet
-    install_nuget_package(Microsoft.Windows.CppWinRT ${CPPWINRT_VERSION} NUGET_MICROSOFT_WINDOWS_CPPWINRT
-        PACKAGESAVEMODE nuspec
-        PRERELEASE ON
-    )
+    if(NOT CPPWINRT_EXECUTABLE_PATH)
+        # Install the Microsoft.Windows.CppWinRT NuGet
+        install_nuget_package(Microsoft.Windows.CppWinRT ${CPPWINRT_VERSION} NUGET_MICROSOFT_WINDOWS_CPPWINRT
+            PACKAGESAVEMODE nuspec
+            PRERELEASE ON
+        )
+        set(CPPWINRT_EXECUTABLE_PATH ${NUGET_MICROSOFT_WINDOWS_CPPWINRT}/bin/cppwinrt.exe)
+    endif()
 
     # Build the command to generate the projection
     set(CPPWINRT_OUTPUT ${CPPWINRT_PROJECTION_ROOT_PATH}/${TARGET_NAME})
     set(CPPWINRT_OUTPUT_FILE ${CPPWINRT_OUTPUT}/output.log)
-    set(CPPWINRT_EXECUTABLE_PATH ${NUGET_MICROSOFT_WINDOWS_CPPWINRT}/bin/cppwinrt.exe)
 
     set(CPPWINRT_COMMAND)
     list(APPEND CPPWINRT_COMMAND
