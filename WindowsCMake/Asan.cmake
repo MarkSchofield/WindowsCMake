@@ -46,6 +46,8 @@ function(windowscmake_add_asan_target)
 
     if(CMAKE_SYSTEM_PROCESSOR STREQUAL AMD64)
         set(ASAN_PLATFORM x86_64)
+    elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL ARM64)
+        set(ASAN_PLATFORM aarch64)
     else()
         set(ASAN_PLATFORM i386)
     endif()
