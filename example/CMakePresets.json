@@ -90,6 +90,34 @@
       }
     },
     {
+      "name": "windows-msvc-arm64+relwithdebinfo+asan",
+      "inherits": ["windows", "+asan"],
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_TOOLCHAIN_FILE": "./Build/WindowsToolchain/Windows.MSVC.toolchain.cmake",
+        "CMAKE_VS_VERSION_PRERELEASE": "ON",
+        "CMAKE_VS_VERSION_RANGE": "[16.0,19.0)",
+        "VS_EXPERIMENTAL_MODULE": "ON",
+        "VS_USE_SPECTRE_MITIGATION_RUNTIME": "OFF",
+        "CMAKE_SYSTEM_PROCESSOR": "ARM64"
+      }
+    },
+    {
+      "name": "windows-msvc-arm64+debug+asan",
+      "inherits": ["windows", "+asan"],
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_TOOLCHAIN_FILE": "./Build/WindowsToolchain/Windows.MSVC.toolchain.cmake",
+        "CMAKE_VS_VERSION_PRERELEASE": "ON",
+        "CMAKE_VS_VERSION_RANGE": "[16.0,19.0)",
+        "VS_EXPERIMENTAL_MODULE": "ON",
+        "VS_USE_SPECTRE_MITIGATION_RUNTIME": "OFF",
+        "CMAKE_SYSTEM_PROCESSOR": "ARM64"
+      }
+    },
+    {
       "name": "windows-clang-x64",
       "inherits": "windows-clang",
       "displayName": "Configure 'windows-clang-x64'",
@@ -141,6 +169,14 @@
       "name": "windows-msvc-x64+asan",
       "configurePreset": "windows-msvc-x64+asan",
       "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "windows-msvc-arm64+relwithdebinfo+asan",
+      "configurePreset": "windows-msvc-arm64+relwithdebinfo+asan"
+    },
+    {
+      "name": "windows-msvc-arm64+debug+asan",
+      "configurePreset": "windows-msvc-arm64+debug+asan"
     },
     {
       "name": "windows-clang-x64+asan",

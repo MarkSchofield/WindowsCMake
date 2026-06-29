@@ -46,6 +46,8 @@ function(windowscmake_add_asan_target)
 
     if(CMAKE_SYSTEM_PROCESSOR STREQUAL AMD64)
         set(ASAN_PLATFORM x86_64)
+    elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL ARM64)
+        set(ASAN_PLATFORM aarch64)
     else()
         set(ASAN_PLATFORM i386)
     endif()
@@ -79,17 +81,40 @@ function(windowscmake_add_asan_target)
     set_target_properties(WindowsCMakeAsanRuntime
         PROPERTIES
             FOLDER WindowsCMake
-
-            IMPORTED_IMPLIB_DEBUG ${ASAN_LIB_DEBUG}
-            IMPORTED_IMPLIB_RELEASE ${ASAN_LIB}
-            IMPORTED_IMPLIB_RELWITHDEBINFO ${ASAN_LIB}
-            IMPORTED_IMPLIB_RELMINSIZE ${ASAN_LIB}
-
-            IMPORTED_LOCATION_DEBUG ${ASAN_DLL_DEBUG}
-            IMPORTED_LOCATION_RELEASE ${ASAN_DLL}
-            IMPORTED_LOCATION_RELWITHDEBINFO ${ASAN_DLL}
-            IMPORTED_LOCATION_RELMINSIZE ${ASAN_DLL}
     )
+
+    if(CMAKE_CONFIGURATION_TYPES)
+        foreach(CONFIGURATION_TYPE ${CMAKE_CONFIGURATION_TYPES})
+            string(TOUPPER "${CONFIGURATION_TYPE}" CONFIGURATION_TYPE)
+            if(CONFIGURATION_TYPE STREQUAL "DEBUG")
+                set_target_properties(WindowsCMakeAsanRuntime
+                    PROPERTIES
+                        IMPORTED_IMPLIB_DEBUG ${ASAN_LIB_DEBUG}
+                        IMPORTED_LOCATION_DEBUG ${ASAN_DLL_DEBUG}
+                )
+            else()
+                set_target_properties(WindowsCMakeAsanRuntime
+                    PROPERTIES
+                        IMPORTED_IMPLIB_${CONFIGURATION_TYPE} ${ASAN_LIB}
+                        IMPORTED_LOCATION_${CONFIGURATION_TYPE} ${ASAN_DLL}
+                )
+            endif()
+        endforeach()
+    else()
+        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+            set_target_properties(WindowsCMakeAsanRuntime
+                PROPERTIES
+                    IMPORTED_IMPLIB ${ASAN_LIB_DEBUG}
+                    IMPORTED_LOCATION ${ASAN_DLL_DEBUG}
+            )
+        else()
+            set_target_properties(WindowsCMakeAsanRuntime
+                PROPERTIES
+                    IMPORTED_IMPLIB ${ASAN_LIB}
+                    IMPORTED_LOCATION ${ASAN_DLL}
+            )
+        endif()
+    endif()
 
     target_link_libraries(WindowsCMakeAsanRuntime
         INTERFACE
