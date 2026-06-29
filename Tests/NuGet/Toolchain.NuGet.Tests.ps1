@@ -37,7 +37,7 @@ Describe 'WindowsCMake NuGet support' {
             "-DTOOLCHAIN_TOOLS_PATH=$ToolsPath"
         )
 
-        $Null = & $CMake --preset windows @Parameters
+        $Null = & $CMake --preset windows @Parameters 2>&1
         $LastExitCode | Should -Be 0
 
         $CMakeCachePath = Join-Path -Path $OutputPath -ChildPath windows/CMakeCache.txt
@@ -51,8 +51,8 @@ Describe 'WindowsCMake NuGet support' {
                 "-DTOOLCHAIN_TOOLS_PATH=$ToolsPath"
             )
 
-            $env:Path = $DownloadPath
-            $Null = & $CMake --preset windows @Parameters --log-level=verbose
+            $env:Path = [System.Environment]::SystemDirectory + ';' + $DownloadPath
+            $Null = & $CMake --preset windows @Parameters --log-level=verbose 2>&1
             $LastExitCode | Should -Be 0
 
             $CMakeCachePath = Join-Path -Path $OutputPath -ChildPath windows/CMakeCache.txt
@@ -63,14 +63,14 @@ Describe 'WindowsCMake NuGet support' {
 
     It 'downloads NuGet if it is not in the path or specified, and TOOLCHAIN_TOOLS_PATH is set' {
         StashEnvironment Path {
-            $env:Path = ''
+            $env:Path = [System.Environment]::SystemDirectory
 
             # With no NuGet to be found, but with TOOLCHAIN_TOOLS_PATH set, the build should succeed.
             $Parameters = @(
                 "-DTOOLCHAIN_TOOLS_PATH=$ToolsPath"
             )
 
-            $Null = & $CMake --preset windows @Parameters
+            $Null = & $CMake --preset windows @Parameters 2>&1
             $LastExitCode | Should -Be 0
 
             $CMakeCachePath = Join-Path -Path $OutputPath -ChildPath windows/CMakeCache.txt
@@ -95,7 +95,7 @@ Describe 'WindowsCMake NuGet support' {
             "-DSPECIFIED_PACKAGESAVEMODE=nuspec"
         )
 
-        $Null = & $CMake --preset windows @Parameters
+        $Null = & $CMake --preset windows @Parameters 2>&1
         $LastExitCode | Should -Be 0
 
         Join-Path $OutputPath 'windows/__nuget/Humanizer.Core.2.14.1/Humanizer.Core.nuspec' |
