@@ -37,7 +37,7 @@ Describe 'WindowsCMake NuGet support' {
             "-DTOOLCHAIN_TOOLS_PATH=$ToolsPath"
         )
 
-        $Null = & $CMake --preset windows @Parameters 2>&1
+        & $CMake --preset windows @Parameters 2>&1
         $LastExitCode | Should -Be 0
 
         $CMakeCachePath = Join-Path -Path $OutputPath -ChildPath windows/CMakeCache.txt
@@ -52,7 +52,7 @@ Describe 'WindowsCMake NuGet support' {
             )
 
             $env:Path = [System.Environment]::SystemDirectory + ';' + $DownloadPath
-            $Null = & $CMake --preset windows @Parameters --log-level=verbose 2>&1
+            & $CMake --preset windows @Parameters --log-level=verbose 2>&1
             $LastExitCode | Should -Be 0
 
             $CMakeCachePath = Join-Path -Path $OutputPath -ChildPath windows/CMakeCache.txt
@@ -70,7 +70,7 @@ Describe 'WindowsCMake NuGet support' {
                 "-DTOOLCHAIN_TOOLS_PATH=$ToolsPath"
             )
 
-            $Null = & $CMake --preset windows @Parameters 2>&1
+            & $CMake --preset windows @Parameters 2>&1
             $LastExitCode | Should -Be 0
 
             $CMakeCachePath = Join-Path -Path $OutputPath -ChildPath windows/CMakeCache.txt
@@ -95,7 +95,7 @@ Describe 'WindowsCMake NuGet support' {
             "-DSPECIFIED_PACKAGESAVEMODE=nuspec"
         )
 
-        $Null = & $CMake --preset windows @Parameters 2>&1
+        & $CMake --preset windows @Parameters 2>&1
         $LastExitCode | Should -Be 0
 
         Join-Path $OutputPath 'windows/__nuget/Humanizer.Core.2.14.1/Humanizer.Core.nuspec' |
