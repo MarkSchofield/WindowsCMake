@@ -40,7 +40,7 @@ Describe 'WindowsCMake Ninja support' {
             "-DCMAKE_MAKE_PROGRAM=$DownloadNinjaPath"
         )
 
-        $Null = & $CMake --preset windows @DefaultParameters @Parameters 2>&1
+        & $CMake --preset windows @DefaultParameters @Parameters 2>&1
         $LastExitCode | Should -Be 0
 
         $CMakeCachePath = Join-Path -Path $OutputPath -ChildPath windows/CMakeCache.txt
@@ -51,7 +51,7 @@ Describe 'WindowsCMake Ninja support' {
     It 'does not download Ninja if it is in the path' {
         StashEnvironment Path {
             $env:Path = [System.Environment]::SystemDirectory + ';' + $DownloadPath
-            $Null = & $CMake --preset windows @DefaultParameters 2>&1
+            & $CMake --preset windows @DefaultParameters 2>&1
             $LastExitCode | Should -Be 0
 
             $CMakeCachePath = Join-Path -Path $OutputPath -ChildPath windows/CMakeCache.txt
@@ -71,7 +71,7 @@ Describe 'WindowsCMake Ninja support' {
             $env:Path = [System.Environment]::SystemDirectory
 
             # With no Ninja to be found, and TOOLCHAIN_TOOLS_PATH not set, the build should fail.
-            $Null = & $CMake --preset windows @DefaultParameters 2>&1
+            & $CMake --preset windows @DefaultParameters 2>&1
             $LastExitCode | Should -Be 1
         }
     }
@@ -85,7 +85,7 @@ Describe 'WindowsCMake Ninja support' {
                 "-DTOOLCHAIN_TOOLS_PATH=$ToolsPath"
             )
 
-            $Null = & $CMake --preset windows @DefaultParameters @Parameters 2>&1
+            & $CMake --preset windows @DefaultParameters @Parameters 2>&1
             $LastExitCode | Should -Be 0
 
             $CMakeCachePath = Join-Path -Path $OutputPath -ChildPath windows/CMakeCache.txt
