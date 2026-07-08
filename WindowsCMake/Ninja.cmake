@@ -34,6 +34,10 @@
 # | NINJA_PATH              | The path to ninja program to use. Defaults not set.                                                                       |
 include_guard()
 
+if(CMAKE_VERSION VERSION_LESS 3.20)
+    message(FATAL_ERROR "WindowsCMake requires at least CMake 3.20, but CMake ${CMAKE_VERSION} is in use.")
+endif()
+
 if((NOT (CMAKE_GENERATOR STREQUAL Ninja)) AND (NOT (CMAKE_GENERATOR STREQUAL "Ninja Multi-Config")))
     return()
 endif()

@@ -21,9 +21,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 # ----------------------------------------------------------------------------------------------------------------------
-cmake_minimum_required(VERSION 3.20)
-
 include_guard()
+
+if(CMAKE_VERSION VERSION_LESS 3.20)
+    message(FATAL_ERROR "WindowsCMake requires at least CMake 3.20, but CMake ${CMAKE_VERSION} is in use.")
+endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/PowerShell.cmake)
 
