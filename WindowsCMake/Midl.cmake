@@ -23,6 +23,10 @@
 #----------------------------------------------------------------------------------------------------------------------
 include_guard()
 
+if(CMAKE_VERSION VERSION_LESS 3.20)
+    message(FATAL_ERROR "WindowsCMake requires at least CMake 3.20, but CMake ${CMAKE_VERSION} is in use.")
+endif()
+
 set(MIDL_1_0_PLATFORM_RESPONSE_FILE "${CMAKE_BINARY_DIR}/midl.1.0.platform.rsp")
 
 #----------------------------------------------------------------------------------------------------------------------
