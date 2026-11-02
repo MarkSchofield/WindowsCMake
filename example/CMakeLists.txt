@@ -26,6 +26,7 @@ if(ENABLE_ASAN)
 endif()
 
 include(${WINDOWSCMAKE_DIR}/ClangFormat.cmake)
+include(${WINDOWSCMAKE_DIR}/ConsoleAllocationPolicy.cmake)
 include(${WINDOWSCMAKE_DIR}/CppWinRT.cmake)
 
 add_cppwinrt_projection(CppWinRT
@@ -53,6 +54,7 @@ target_include_directories(wil
 
 add_subdirectory(CommandLineAsan)
 add_subdirectory(CommandLine)
+add_subdirectory(HybridApplication)
 add_subdirectory(SharedLibrary)
 add_subdirectory(WindowsApplication)
 
