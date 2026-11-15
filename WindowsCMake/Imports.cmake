@@ -23,8 +23,8 @@
 #----------------------------------------------------------------------------------------------------------------------
 include_guard()
 
-if(CMAKE_VERSION VERSION_LESS 3.20)
-    message(FATAL_ERROR "WindowsCMake requires at least CMake 3.20, but CMake ${CMAKE_VERSION} is in use.")
+if(CMAKE_VERSION VERSION_LESS 3.29)
+    message(FATAL_ERROR "WindowsCMake requires at least CMake 3.29, but CMake ${CMAKE_VERSION} is in use.")
 endif()
 
 #[[====================================================================================================================
@@ -48,8 +48,21 @@ endif()
 ====================================================================================================================]]#
 function(add_import_library TARGET_NAME)
 
-    if((NOT(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")) AND (NOT(CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")))
-        message(FATAL_ERROR "add_import_library only works with an MSVC compiler front-end.")
+    if((CMAKE_CXX_COMPILER_LINKER_ID STREQUAL "MSVC") OR (CMAKE_C_COMPILER_LINKER_ID STREQUAL "MSVC"))
+        set(LIB_COMMAND "")
+        list(APPEND LIB_COMMAND
+            "\"${CMAKE_CXX_COMPILER_LINKER}\""
+            /lib
+        )
+    elseif((CMAKE_CXX_COMPILER_LINKER_ID STREQUAL "LLD") OR (CMAKE_C_COMPILER_LINKER_ID STREQUAL "LLD"))
+        set(LIB_COMMAND "")
+        list(APPEND LIB_COMMAND
+            "\"${CMAKE_CXX_COMPILER_LINKER}\""
+            -flavor link
+            /lib
+        )
+    else()
+        message(FATAL_ERROR "add_import_library only works with an MSVC linker, or an LLVM LLD linker")
     endif()
 
     if((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS "17.0"))
@@ -98,9 +111,7 @@ function(add_import_library TARGET_NAME)
         endif()
     endif()
 
-    set(LIB_COMMAND "")
     list(APPEND LIB_COMMAND
-        "\"${CMAKE_AR}\""
         "\"/DEF:${DEF_FILE_PATH}\""
         "\"/OUT:${LIB_FILE_PATH}\""
         "/MACHINE:${LIB_MACHINE}"
@@ -116,7 +127,7 @@ function(add_import_library TARGET_NAME)
 setlocal enabledelayedexpansion
 ${LIB_COMMAND_LINE} > ${LIB_COMMAND_SCRIPT}.log 2>&1
 findstr /spin /c:warning /c:error ${LIB_COMMAND_SCRIPT}.log > nul
-if %errorlevel% EQU 0 (
+if !errorlevel! EQU 0 (
     echo ${LIB_COMMAND_LINE}
     SET LOGFILE=${LIB_COMMAND_SCRIPT}.log
     SET LOGFILE=!LOGFILE:/=\\!
