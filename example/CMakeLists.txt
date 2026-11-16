@@ -5,6 +5,13 @@ cmake_minimum_required(VERSION 3.20)
 
 project(WindowsCMakeExample)
 
+#[[====================================================================================================================
+    post_build_copy_runtime_dlls
+    ----------------------------
+
+    Adds a 'PORT_BUILD' command to the given target to copy all 'TARGET_RUNTIME_DLLS' of the target into the target's
+    'TARGET_FILE_DIR'.
+====================================================================================================================]]#
 macro(post_build_copy_runtime_dlls TARGET)
     add_custom_command(TARGET ${TARGET} POST_BUILD
     COMMENT "Copying '${TARGET}' dependencies"
