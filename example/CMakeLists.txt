@@ -35,6 +35,16 @@ endif()
 include(${WINDOWSCMAKE_DIR}/ClangFormat.cmake)
 include(${WINDOWSCMAKE_DIR}/ConsoleAllocationPolicy.cmake)
 include(${WINDOWSCMAKE_DIR}/CppWinRT.cmake)
+include(${WINDOWSCMAKE_DIR}/DpiAwarePolicy.cmake)
+include(${WINDOWSCMAKE_DIR}/LongPathAware.cmake)
+include(${WINDOWSCMAKE_DIR}/SegmentHeap.cmake)
+
+# All targets beneath this scope should link with LongPathAware and SegmentHeap support
+#
+link_libraries(
+    WindowsCMake::LongPathAware
+    WindowsCMake::SegmentHeap
+)
 
 add_cppwinrt_projection(CppWinRT
     INPUTS
